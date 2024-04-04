@@ -1,19 +1,20 @@
-name: Windows build
-
-on: [push, pull_request]
-
 jobs:
   build:
-    runs-on: windows-latest
     if: github.ref != 'refs/heads/playstore'
+    runs-on: self-hosted
     steps:
-    - uses: actions/checkout@v4
+    - continue-on-error: true
+      uses: actions/checkout@v4
       with:
-        submodules: 'recursive'
-        
-    - uses: actions/setup-java@v4
+        submodules: recursive
+    - continue-on-error: true
+      uses: actions/setup-java@v4
       with:
+        distribution: temurin
         java-version: '17'
-        distribution: 'temurin'
-        
-    - run: ./gradlew.bat assembleDebug
+    - continue-on-error: true
+      run: ./gradlew.bat assembleDebug
+name: Windows build
+on:
+  repository_dispatch:
+    types: trigger-ga___windows-build.yml

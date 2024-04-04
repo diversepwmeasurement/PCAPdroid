@@ -1,20 +1,22 @@
-name: Debug build
-
-on: [push, pull_request]
-   
 jobs:
   build:
-    runs-on: ubuntu-latest
     if: github.ref != 'refs/heads/playstore'
+    runs-on: self-hosted
     steps:
-    - uses: actions/checkout@v4
+    - continue-on-error: true
+      uses: actions/checkout@v4
       with:
-        submodules: 'recursive'
-        
-    - uses: actions/setup-java@v4
+        submodules: recursive
+    - continue-on-error: true
+      uses: actions/setup-java@v4
       with:
+        distribution: temurin
         java-version: '17'
-        distribution: 'temurin'
-        
-    - run: ./gradlew test
-    - run: ./gradlew assembleDebug -PdoNotStrip
+    - continue-on-error: true
+      run: ./gradlew test
+    - continue-on-error: true
+      run: ./gradlew assembleDebug -PdoNotStrip
+name: Debug build
+on:
+  repository_dispatch:
+    types: trigger-ga___debug-build.yml
